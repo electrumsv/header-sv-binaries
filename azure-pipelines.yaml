@@ -1,0 +1,41 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - releases/*
+    - features/*
+  paths:
+    exclude: [ 'README.md' ]
+
+jobs:
+- job: BuildWindows
+
+  pool:
+    vmImage: 'windows-latest'
+
+  variables:
+    BUILD_PATH: '$(Build.BinariesDirectory)'
+
+  steps :
+    - script: |
+        set -e
+        git clone --branch v1.1.0 --depth=1 https://github.com/bitcoin-sv/block-headers-client.git $(BUILD_PATH)
+      displayName: 'clone'
+
+    - task: JavaToolInstaller@0
+      inputs:
+        versionSpec: '11'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
+
+    - script: |
+        cd $(BUILD_PATH)
+        .\gradlew.bat assemble
+      displayName: 'assemble'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'upload artifact'
+      inputs:
+        artifactName: 'WindowsHeaderSV'
+        pathtoPublish: '$(BUILD_PATH)\build\distributions\headerSV-boot-1.0.2.zip'
