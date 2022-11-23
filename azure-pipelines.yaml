@@ -20,7 +20,7 @@ jobs:
   steps :
     - script: |
         set -e
-        git clone --branch v2.0.3 --depth=1 https://github.com/bitcoin-sv/block-headers-client.git $(BUILD_PATH)
+        git clone --branch v2.0.4 --depth=1 https://github.com/bitcoin-sv/block-headers-client.git $(BUILD_PATH)
       displayName: 'clone'
 
     - task: JavaToolInstaller@0
@@ -36,11 +36,11 @@ jobs:
 
     - script: |
         cd $(BUILD_PATH)
-        copy app\build\distributions\app-boot-2.0.3.zip app\build\distributions\headersv-boot-2.0.3.zip
+        copy app\build\distributions\app-boot-2.0.4.zip app\build\distributions\headersv-boot-2.0.4.zip
       displayName: 'rename build file'
 
     - task: PublishBuildArtifacts@1
       displayName: 'upload artifact'
       inputs:
         artifactName: 'WindowsHeaderSV'
-        pathtoPublish: '$(BUILD_PATH)\app\build\distributions\headersv-boot-2.0.3.zip'
+        pathtoPublish: '$(BUILD_PATH)\app\build\distributions\headersv-boot-2.0.4.zip'
